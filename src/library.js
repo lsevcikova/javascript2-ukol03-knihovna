@@ -1,3 +1,7 @@
+import {
+  timingSafeEqual
+} from "crypto";
+
 /*
   Třída pro knihovnu.
 
@@ -38,9 +42,10 @@ export default class Library {
 
   /* výpis všech knih v knihovně */
   listAllBooks() {
-    console.table(this.bookList);
-    console.log(this.currentBook);
-    console.log(this.nextBook);
+    const element = document.getElementById('booklist');
+    for (let book of this.bookList) {
+      element.appendChild(book.renderHTML());
+    }
   }
 
   /* začít číst další knihu */
@@ -58,6 +63,24 @@ export default class Library {
         }
       }
     }
+  }
+
+  /* dočtení aktuálně čtené knihy */
+  finishCurrentBook() {
+    if (this.currentBook !== null) {
+      this.currentBook.read();
+      this.lastBook = this.currentBook;
+      this.currentBook = null;
+      this.unreadBooks--;
+    }
+  }
+
+  /* výpis všech nepřečtených knih */
+  listUnreadBooks() {
+    let unreadBookList = this.bookList.filter((value)=>{          //funkcionalni programovani
+      return value.isRead == false;
+    });
+    console.table(unreadBookList);
   }
 
 }
